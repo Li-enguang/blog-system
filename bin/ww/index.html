@@ -1,0 +1,267 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>BLOG SYSTEM</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+  <link rel="stylesheet" href="assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="editor/css/editormd.css">
+  <link rel="stylesheet" href="editor/css/editormd.preview.css">
+</head>
+
+<body id="blog">
+    
+<div id="app">
+<hr>
+<nav class="am-g am-g-fixed blog-fixed blog-nav">
+<button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+</nav>
+<hr>
+
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed">
+    <div class="am-u-md-8 am-u-sm-12">
+        <div class="am-u-lg-12 am-u-md-12 am-u-sm-12 am-u-sm-centered blog-entry-img">
+            <img src="assets/i/f12.jpg" alt="" class="am-u-sm-12">
+            <h3 class="blog-text-center blog-title"></h3>
+                <div id="times">
+                </div>
+               
+        </div>
+        <article class="am-g blog-entry-article" v-for="blog in blog_list" v-show="status!='blog_edit'">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                <img src="assets/i/f10.jpg" class="am-u-sm-12">
+            </div>
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                <span><a href="" class="blog-color" v-if="tag_list.length>0">{{get_tag_name_by_id(blog.lable_id)}} &nbsp;</a></span>
+                <span> @{{author}}&nbsp;</span>
+                <span>{{blog.blog_time}}</span>
+                <h1><a v-on:click="blog_view(blog.blog_id)">{{blog.blog_title}}</a></h1>
+            </div>
+            <span v-show="status=='blog_admin'">
+                <button class="am-btn am-btn-success" v-on:click="blog_edit(blog.blog_id)">
+                    <i class="am-icon-cog"></i>编辑</button>
+                <button class="am-btn am-btn-danger" v-on:click="blog_delete(blog.blog_id)">
+                    <i class="am-icon-spinner am-icon-spin"></i>删除</button>
+            </span>
+        </article>
+        
+        <ul class="am-pagination">
+  <li class="am-pagination-prev"><a v-on:click="into_admin_status" v-show="status!='blog_edit'">管理</a></li>
+
+  <span v-show="status=='blog_admin'">
+  <button class="am-btn am-btn-success" v-on:click="into_bloglist_status">取消</button>
+</span>
+  <li class="am-pagination-next"><a v-on:click="" v-show="status!='blog_edit'">新增</a></li>
+</ul>
+    </div>
+
+    <div class="am-u-md-12 am-u-sm-12" v-show="status=='blog_edit'">
+        <div class="am-form-group">
+            <label for="doc-ipt-email-1">标题</label>
+            <input type="email" class="" id="doc-ipt-email-1" placeholder="博客标题" v-model="show_blog.blog_title">
+          </div>
+            <div id="test-editor">
+                <textarea style="display:none;">{{show_blog.content}}</textarea>
+            </div>
+        <span v-show="status=='blog_edit'">
+            <button class="am-btn am-btn-success" v-on:click="into_bloglist_status" >返回</button>
+            <button class="am-btn am-btn-success" v-on:click="blog_update" >提交</button>
+        </span>
+    </div>
+    
+    <div class="am-u-md-4 am-u-sm-12 blog-sidebar" v-show="status!='blog_edit'">
+        <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
+            <img src="assets/i/b1.jpg" alt="about me" class="blog-entry-img" >
+            <p>加油 奋斗 追寻更好的人生</p>
+        </div>
+          
+        <div class="blog-sidebar-widget blog-bor" v-show="status!='blog_edit'">
+            <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
+            <p>
+                <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+                <a href=""><span class="am-icon-github am-icon-fw blog-icon"></span></a>
+                <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
+                <a href=""><span class="am-icon-reddit am-icon-fw blog-icon"></span></a>
+                <a href=""><span class="am-icon-weixin am-icon-fw blog-icon"></span></a>
+            </p>
+        </div>
+        <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g " v-show="status!='blog_edit'">
+            <h2 class="blog-title"><span>Tag</span></h2>
+            <div class="am-u-sm-12 blog-clear-padding">
+            <a href="" class="blog-tag" v-for="tag in tag_list">{{tag.tag_name}}</a>
+            </div>    
+        </div>
+
+    </div>
+</div>
+<!-- content end -->    
+
+ <footer class="blog-footer">
+    <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-footer-padding">
+    </div>    
+    <div class="blog-text-center">@2021 author By {{author}}</div>    
+  </footer>
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/amazeui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="editor/editormd.min.js"></script>
+<script src="editor/lib/marked.min.js"></script>
+        <script src="editor/lib/prettify.min.js"></script>
+        
+        <script src="editor/lib/raphael.min.js"></script>
+        <script src="editor/lib/underscore.min.js"></script>
+        <script src="editor/lib/sequence-diagram.min.js"></script>
+        <script src="editor/lib/flowchart.min.js"></script>
+        <script src="editor/lib/jquery.flowchart.min.js"></script>
+        <script src="editor/editormd.js"></script>
+<script>
+    var app = new Vue({
+  el: '#app',
+  data: {
+    author: 'Li-eng',
+    blog_list:[{blog_id:1,blog_title:"c++"}],
+    tag_list:[],
+    status:'blog_list', //blog_edit blog_new blog_delete
+    show_blog:{blog_id:null,lable_id:null,blog_title:null,content:null,blog_time:null}
+  },
+  methods:{
+      get_blog_list:function(){
+          $.ajax({
+                  url:"/blog",
+                  type:"get",
+                  context:this,
+                  success:function(result){
+                  this.blog_list=result;
+                }
+              })
+      },
+      get_tag_list:function(){
+          $.ajax({
+                  url:"/tag",
+                  type:"get",
+                  context:this,
+                  success:function(result){
+                  this.tag_list=result;
+                }
+              })
+      },
+      get_tag_name_by_id:function(tag_id){
+                for(idx in this.tag_list){
+                    if(this.tag_list[idx].tag_id==tag_id)
+                    {
+                        return this.tag_list[idx].tag_name;
+                    }
+                }
+                return "未知";
+      },
+      into_admin_status:function(){
+             this.status='blog_admin';
+      },
+      into_bloglist_status:function(){
+             this.status='blog_list';
+             this.get_blog_list();
+      },
+      into_new_status:function(){
+             this.status='blog_new'; 
+      },
+      into_tagdel_status:function(){
+             this.status='tag_delete'; 
+      },
+      blog_delete:function(blog_id){
+        $.ajax({
+            url:"/blog/"+blog_id,
+            type:"delete",
+            context:this,
+            success:function(result){
+                  this.get_blog_list();
+                }
+        })
+      },
+      blog_edit:function(blog_id){
+        $.ajax({
+            url:"/blog/"+blog_id,
+            type:"get",
+            context:this,
+            success:function(result){
+                this.show_blog=result;
+                this.status='blog_edit';
+                testEditor=editormd({
+                    id:"test-editor",
+                    width:"100%",
+                    height:640,
+                    path:"editor/lib/"
+                })
+                }
+        }) 
+     },
+     blog_update:function(){
+         this.show_blog.content=testEditor.getMarkdown();
+         $.ajax({
+             url:"/blog/"+this.show_blog.blog_id,
+             type:"put",
+             context:this,
+             data:JSON.stringify(this.show_blog),
+             success:function(result){
+                 this.get_blog_list();
+                 this.status='blog_list';
+             }
+         })
+     },
+     blog_view:function(blog_id){
+        $.ajax({
+            url:"/blog/"+ blog_id,
+            type:"get",
+            context:this,
+            success:function(result){
+                  this.show_blog=result;
+                  this.status='blog_edit';
+                  testEditormdView = editormd.markdownToHTML("test-editor", {
+                        markdown        : this.show_blog.content ,
+                        htmlDecode      : "style,script,iframe",  
+                        tocm            : true,    // Using [TOCM]
+                        emoji           : true,
+                        taskList        : true,
+                        markdownSourceCode : true,
+                        tex             : true,  // 默认不解析
+                        flowChart       : true,  // 默认不解析
+                        sequenceDiagram : true,  // 默认不解析
+                    });
+                }
+        })
+     }
+  }        
+});
+app.get_blog_list();
+app.get_tag_list();
+</script>
+<script type="text/javascript">
+    function  getD1(){
+        var date=new Date();
+        var d1=date.toLocaleString();
+        var div1=document.getElementById("times");
+        div1.innerHTML =d1;
+    }   
+    setInterval("getD1();",1000);            
+   </script>
+</body>
+</html>

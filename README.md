@@ -14,29 +14,41 @@ database.hpp:数据库调用模块,后台执行的业务逻辑对数据库增删
 
 连接数据库，传入用户名密码，库的名称，默认3306端口  
 
-初始化: mysql_init;
-连接服务器: mysql_real_connect; 
-设置字符集: mysql_set_character_set;
-选择数据库: mysql_select_db
-遍历结果: mysql_fetch_row;
-保存结果集: mysql_store_result;
-获取结果行数: mysql_num_rows;
-获取结果列数: mysql_num_fields
-遍历结果: mysql_fetch_row;
-释放结果集: mysql_free_result;
-关闭数据库: mysql_close;
-获取接口错误原因: mysql_error
+   初始化: mysql_init;
+   
+   连接服务器: mysql_real_connect; 
+   
+   设置字符集: mysql_set_character_set;
+   
+   选择数据库: mysql_select_db
+   
+   遍历结果: mysql_fetch_row;
+   
+   保存结果集: mysql_store_result;
+   
+   获取结果行数: mysql_num_rows;
+   
+   获取结果列数: mysql_num_fields
+   
+   遍历结果: mysql_fetch_row;
+   
+   释放结果集: mysql_free_result;
+   
+   关闭数据库: mysql_close;
+   
+   获取接口错误原因: mysql_error
 
 举例：组织sql语句，调用mysqlquery函数
- //向tag中插入新的标签
- 77     bool InsertTag(Json::Value& tag)
- 78     {
- 79         #define INSERT_TAG "insert into tag values(null,'%s');"
- 80         char tmp[1024]={0};
- 81         sprintf(tmp,INSERT_TAG,tag["tag_name"].asCString());
- 82         bool ret=MysqlQuery(_mysql,tmp);
- 83         return ret;
- 84     }
+
+     //向tag中插入新的标签
+     bool InsertTag(Json::Value& tag)
+     {
+          #define INSERT_TAG "insert into tag values(null,'%s');"
+          char tmp[1024]={0};
+          sprintf(tmp,INSERT_TAG,tag["tag_name"].asCString());
+          bool ret=MysqlQuery(_mysql,tmp);
+          return ret;
+      }
 
 
 httpsever.cpp:http服务器模块，基于httplib搭建，采用RESTful风格进行接口设计，对用户不同的请求进行相应的业务处理。

@@ -273,5 +273,5 @@ private:
     MYSQL* _mysql;
     mutex _mutex;
 };
-
+ 
 

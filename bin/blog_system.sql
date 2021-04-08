@@ -1,5 +1,5 @@
 drop database if exists blog_system;
-create database if not exists  blog_system;
+create database if not exists  blog_system charset=utf8;
 
 use blog_system;
 

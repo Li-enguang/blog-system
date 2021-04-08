@@ -248,7 +248,36 @@
                     });
                 }
         })
-     }
+     },
+     new_blog: function() {
+                //显示一个博客的编辑页面，其中具有博客的内容
+                this.status = "blog_new";
+                newEditor = editormd({
+                    id      : "new-editormd",
+                    width   : "100%",
+                    height  : 640,
+                    path    : "editor/lib/"
+                });
+            },
+     blog_insert: function() {
+                this.show_blog.content = newEditor.getMarkdown();
+                var new_blog_info = {
+                    tag_id: 1,
+                    title: this.show_blog.blog_title,
+                    content: this.show_blog.content,
+                }
+                alert(JSON.stringify(new_blog_info));
+                $.ajax({
+                    url: "/blog", 
+                    type: "post",
+                    context: this,
+                    data: JSON.stringify(new_blog_info),
+                    success: function(result){
+                        this.get_blog_list();
+                        this.status = 'blog_list';
+                    }
+                })
+        }
   }        
 });
 app.get_blog_list();
